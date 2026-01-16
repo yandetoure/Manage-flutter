@@ -3,6 +3,8 @@ class DashboardData {
   final double totalRevenues;
   final double totalExpenses;
   final double totalSavings;
+  final double totalDebts;
+  final double totalClaims;
   final double balance;
   final List<TransactionItem> recentTransactions;
 
@@ -10,6 +12,8 @@ class DashboardData {
     required this.totalRevenues,
     required this.totalExpenses,
     required this.totalSavings,
+    required this.totalDebts,
+    required this.totalClaims,
     required this.balance,
     required this.recentTransactions,
   });
@@ -19,6 +23,8 @@ class DashboardData {
       totalRevenues: _parseDouble(json['total_revenues']),
       totalExpenses: _parseDouble(json['total_expenses']),
       totalSavings: _parseDouble(json['total_savings']),
+      totalDebts: _parseDouble(json['total_debts']),
+      totalClaims: _parseDouble(json['total_claims']),
       balance: _parseDouble(json['balance']),
       recentTransactions: (json['recent_transactions'] as List?)
           ?.map((e) => TransactionItem.fromJson(e))
@@ -40,6 +46,8 @@ class TransactionItem {
   final String? description;
   final String date; // keep as string for now or parse
   final String type; // 'revenue' or 'expense'
+  final String? source;
+  final String? category;
 
   TransactionItem({
     required this.id,
@@ -47,6 +55,8 @@ class TransactionItem {
     this.description,
     required this.date,
     required this.type,
+    this.source,
+    this.category,
   });
 
   factory TransactionItem.fromJson(Map<String, dynamic> json) {
@@ -56,6 +66,8 @@ class TransactionItem {
       description: json['description'],
       date: json['date'] ?? '',
       type: json['type'] ?? 'revenue',
+      source: json['source'],
+      category: json['category'],
     );
   }
 }

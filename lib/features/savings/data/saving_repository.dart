@@ -39,4 +39,32 @@ class SavingRepository {
       throw e;
     }
   }
+  Future<void> updateSaving({
+    required int id,
+    required String targetName,
+    required double targetAmount,
+    required double currentAmount,
+    String? deadline,
+    String? description,
+  }) async {
+    try {
+      await _apiClient.client.put('/savings/$id', data: {
+        'target_name': targetName,
+        'target_amount': targetAmount,
+        'current_amount': currentAmount,
+        'deadline': deadline,
+        'description': description,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> deleteSaving(int id) async {
+    try {
+      await _apiClient.client.delete('/savings/$id');
+    } catch (e) {
+      throw e;
+    }
+  }
 }

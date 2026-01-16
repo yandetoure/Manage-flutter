@@ -13,6 +13,14 @@ import '../../core/placeholder_screen.dart';
 import '../../features/revenues/presentation/add_revenue_screen.dart';
 import '../../features/expenses/presentation/add_expense_screen.dart';
 import '../../features/savings/presentation/add_saving_screen.dart';
+import '../../features/transactions/domain/transaction.dart';
+import '../../features/savings/domain/saving.dart';
+import '../../features/debts/presentation/debts_screen.dart';
+import '../../features/claims/presentation/claims_screen.dart';
+import '../../features/debts/domain/debt.dart';
+import '../../features/claims/domain/claim.dart';
+import '../../features/debts/presentation/add_debt_screen.dart';
+import '../../features/claims/presentation/add_claim_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -55,7 +63,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/add-saving',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const AddSavingScreen(),
+        builder: (context, state) => AddSavingScreen(saving: state.extra as Saving?),
+      ),
+      GoRoute(
+        path: '/debts',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const DebtsScreen(),
+      ),
+      GoRoute(
+        path: '/claims',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ClaimsScreen(),
+      ),
+      GoRoute(
+        path: '/add-debt',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => AddDebtScreen(debt: state.extra as Debt?),
+      ),
+      GoRoute(
+        path: '/add-claim',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => AddClaimScreen(claim: state.extra as Claim?),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {

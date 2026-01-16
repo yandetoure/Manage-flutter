@@ -22,4 +22,13 @@ class SavingController extends StateNotifier<AsyncValue<List<Saving>>> {
       state = AsyncValue.error(e, st);
     }
   }
+
+  Future<void> deleteSaving(int id) async {
+    try {
+      await _repository.deleteSaving(id);
+      await refresh();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
 }

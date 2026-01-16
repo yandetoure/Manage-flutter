@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dashboard_controller.dart';
+import 'package:go_router/go_router.dart';
+import '../domain/dashboard_data.dart';
 import '../../auth/presentation/auth_controller.dart';
+import '../../transactions/presentation/transaction_controller.dart';
+import '../../transactions/domain/transaction.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/premium_action_modal.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -56,27 +61,51 @@ class DashboardScreen extends ConsumerWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildSummaryCard(
-                        context,
-                        title: 'Revenus',
-                        amount: currencyFormat.format(data.totalRevenues),
-                        color: AppColors.primaryGreen,
-                        icon: Icons.arrow_upward,
-                        isSmall: true,
+                      child: InkWell(
+                        onTap: () => context.push('/claims'),
+                        child: _buildSummaryCard(
+                          context,
+                          title: 'Créances',
+                          amount: currencyFormat.format(data.totalClaims),
+                          color: AppColors.primaryGreen,
+                          icon: Icons.monetization_on,
+                          isSmall: true,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: _buildSummaryCard(
-                        context,
-                        title: 'Dépenses',
-                        amount: currencyFormat.format(data.totalExpenses),
-                        color: AppColors.danger,
-                        icon: Icons.arrow_downward,
-                        isSmall: true,
+                      child: InkWell(
+                        onTap: () => context.push('/debts'),
+                        child: _buildSummaryCard(
+                          context,
+                          title: 'Dettes',
+                          amount: currencyFormat.format(data.totalDebts),
+                          color: Colors.purple,
+                          icon: Icons.money_off,
+                          isSmall: true,
+                        ),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 24),
+                // Quick Actions
+                const Text(
+                  'Actions Rapides',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                const SizedBox(height: 16),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildQuickAction(context, 'Ajouter Revenu', Icons.add_circle, AppColors.primaryGreen, () => context.push('/add-revenue')),
+                      _buildQuickAction(context, 'Dépense', Icons.remove_circle, AppColors.danger, () => context.push('/add-expense')),
+                      _buildQuickAction(context, 'Rembourser', Icons.payments, Colors.purpleAccent, () => context.push('/debts')),
+                      _buildQuickAction(context, 'Recouvrer', Icons.money, AppColors.accentBlue, () => context.push('/claims')),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -93,7 +122,7 @@ class DashboardScreen extends ConsumerWidget {
                     child: Text('Aucune transaction récente', style: TextStyle(color: AppColors.textMuted)),
                   )
                 else
-                  ...data.recentTransactions.map((tx) => _buildTransactionItem(context, tx, currencyFormat)),
+                  ...data.recentTransactions.map((tx) => _buildTransactionItem(context, ref, tx, currencyFormat)),
               ],
             ),
           );
@@ -152,54 +181,169 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTransactionItem(BuildContext context, dynamic tx, NumberFormat format) {
+  Widget _buildTransactionItem(BuildContext context, WidgetRef ref, dynamic tx, NumberFormat format) {
     final isExpense = tx.type == 'expense';
     final color = isExpense ? AppColors.danger : AppColors.primaryGreen;
     
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.03)),
+    return InkWell(
+      onTap: () => _showActionModal(context, ref, tx),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withOpacity(0.03)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                isExpense ? Icons.arrow_downward : Icons.arrow_upward,
+                color: color,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tx.description ?? (isExpense ? tx.category ?? 'Dépense' : tx.source ?? 'Revenu'),
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  Text(
+                    tx.date,
+                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              '${isExpense ? '-' : '+'}${format.format(tx.amount)}',
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+    );
+  }
+
+  void _showActionModal(BuildContext context, WidgetRef ref, dynamic tx) {
+    // Map dashboard transaction to domain Transaction
+    final domainTx = Transaction(
+      id: tx.id,
+      amount: tx.amount.toDouble(),
+      description: tx.description,
+      date: tx.date,
+      type: tx.type,
+      category: tx.category,
+      source: tx.source,
+    );
+    final isExpense = tx.type == 'expense';
+    final format = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA');
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) => PremiumActionModal(
+        title: tx.description ?? (isExpense ? tx.category ?? 'Dépense' : tx.source ?? 'Revenu'),
+        amountText: format.format(tx.amount),
+        amountColor: isExpense ? AppColors.danger : AppColors.primaryGreen,
+        primaryActionLabel: isExpense ? 'Ajouter Dépense' : 'Ajouter Revenu',
+        primaryActionIcon: isExpense ? Icons.remove_circle : Icons.add_circle,
+        primaryActionColor: isExpense ? AppColors.danger : AppColors.primaryGreen,
+        onPrimaryAction: () {
+          Navigator.pop(context);
+          if (tx.type == 'revenue') {
+            context.push('/add-revenue');
+          } else {
+            context.push('/add-expense');
+          }
+        },
+        onHistory: () {
+          Navigator.pop(context);
+        },
+        onEdit: () {
+          Navigator.pop(context);
+          if (tx.type == 'revenue') {
+            context.push('/add-revenue', extra: domainTx);
+          } else {
+            context.push('/add-expense', extra: domainTx);
+          }
+        },
+        onDelete: () {
+          Navigator.pop(context);
+          _confirmDelete(context, ref, domainTx);
+        },
+        deleteLabel: 'Supprimer la transaction',
+      ),
+    );
+  }
+
+  Widget _buildQuickAction(BuildContext context, String label, IconData icon, Color color, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 100,
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(icon, color: color, size: 24),
             ),
-            child: Icon(
-              isExpense ? Icons.arrow_downward : Icons.arrow_upward,
-              color: color,
-              size: 20,
+            const SizedBox(height: 12),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, WidgetRef ref, Transaction tx) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.card,
+        title: const Text('Supprimer', style: TextStyle(color: Colors.white)),
+        content: const Text('Voulez-vous vraiment supprimer cette transaction ?', style: TextStyle(color: AppColors.textMuted)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Annuler'),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tx.description ?? 'Transaction',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                Text(
-                  tx.date, // Format date nicely if possible
-                  style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            '${isExpense ? '-' : '+'}${format.format(tx.amount)}',
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ref.read(transactionControllerProvider.notifier).deleteTransaction(tx);
+              ref.read(dashboardControllerProvider.notifier).refresh();
+            },
+            child: const Text('Supprimer', style: TextStyle(color: AppColors.danger)),
           ),
         ],
       ),
