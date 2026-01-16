@@ -6,6 +6,8 @@ import 'saving_controller.dart';
 import '../data/saving_repository.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/premium_action_modal.dart';
+import '../../../core/providers/app_settings_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 import '../../dashboard/presentation/dashboard_controller.dart';
 
 class SavingsScreen extends ConsumerWidget {
@@ -14,7 +16,7 @@ class SavingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final savingsState = ref.watch(savingControllerProvider);
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: '€');
+    final userCurrency = ref.watch(appSettingsProvider)?.currency ?? 'FCFA';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -78,7 +80,7 @@ class SavingsScreen extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              currencyFormat.format(saving.currentAmount),
+                              CurrencyFormatter.format(saving.currentAmount, userCurrency),
                               style: const TextStyle(
                                 color: AppColors.accentBlue,
                                 fontWeight: FontWeight.bold,
@@ -86,7 +88,7 @@ class SavingsScreen extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              'Objectif: ${currencyFormat.format(saving.targetAmount)}',
+                              'Objectif: ${CurrencyFormatter.format(saving.targetAmount, userCurrency)}',
                               style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
                             ),
                           ],
@@ -109,7 +111,7 @@ class SavingsScreen extends ConsumerWidget {
   }
 
   void _showActionModal(BuildContext context, WidgetRef ref, dynamic saving) {
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: '€');
+    final userCurrency = ref.read(appSettingsProvider)?.currency ?? 'FCFA';
     final remaining = saving.targetAmount - saving.currentAmount;
 
     showModalBottomSheet(
@@ -118,9 +120,9 @@ class SavingsScreen extends ConsumerWidget {
       isScrollControlled: true,
       builder: (context) => PremiumActionModal(
         title: saving.targetName,
-        amountText: currencyFormat.format(saving.currentAmount),
+        amountText: CurrencyFormatter.format(saving.currentAmount, userCurrency),
         amountColor: AppColors.primaryGreen,
-        subtext: 'Reste à épargner: ${currencyFormat.format(remaining > 0 ? remaining : 0)}',
+        subtext: 'Reste à épargner: ${CurrencyFormatter.format(remaining > 0 ? remaining : 0, userCurrency)}',
         subtextColor: AppColors.accentBlue,
         primaryActionLabel: 'Épargner',
         primaryActionIcon: Icons.savings,

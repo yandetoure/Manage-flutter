@@ -18,17 +18,15 @@ class UserSettings {
   });
 
   factory UserSettings.fromJson(Map<String, dynamic> json) {
-    final user = json['user'];
-    final settings = json['settings'];
-
+    // New flattened API response structure
     return UserSettings(
-      userId: user['id'],
-      userName: user['name'],
-      userEmail: user['email'],
-      currency: settings['currency'] ?? 'FCFA',
-      language: settings['language'] ?? 'fr',
-      theme: settings['theme'] ?? 'dark',
-      notificationsEnabled: settings['notifications_enabled'] == 1 || settings['notifications_enabled'] == true,
+      userId: json['user_id'] ?? 0, // Add user_id to backend response or use 0 as placeholder
+      userName: json['user_name'] ?? '',
+      userEmail: json['user_email'] ?? '',
+      currency: json['currency'] ?? 'FCFA',
+      language: json['language'] ?? 'fr',
+      theme: json['theme'] ?? 'dark',
+      notificationsEnabled: json['notifications_enabled'] == 1 || json['notifications_enabled'] == true,
     );
   }
 

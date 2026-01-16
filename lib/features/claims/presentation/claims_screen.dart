@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/premium_action_modal.dart';
+import '../../../core/providers/app_settings_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 import '../../debts/presentation/payment_modal.dart'; // Reuse from debts
 import '../../debts/presentation/history_modal.dart'; // Reuse from debts
 import '../data/claim_repository.dart';
@@ -16,7 +18,7 @@ class ClaimsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final claimsState = ref.watch(claimControllerProvider);
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA');
+    final userCurrency = ref.watch(appSettingsProvider)?.currency ?? 'FCFA';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -40,7 +42,7 @@ class ClaimsScreen extends ConsumerWidget {
               itemCount: claims.length,
               itemBuilder: (context, index) {
                 final claim = claims[index];
-                return _buildClaimItem(context, ref, claim, currencyFormat);
+                return _buildClaimItem(context, ref, claim, userCurrency);
               },
             ),
           );
@@ -49,7 +51,7 @@ class ClaimsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildClaimItem(BuildContext context, WidgetRef ref, Claim claim, NumberFormat format) {
+  Widget _buildClaimItem(BuildContext context, WidgetRef ref, Claim claim, String currency) {
     return InkWell(
       onTap: () => _showActionModal(context, ref, claim),
       child: Container(
@@ -84,7 +86,7 @@ class ClaimsScreen extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(format.format(claim.amount), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(CurrencyFormatter.format(claim.amount, currency), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                 const SizedBox(height: 4),
                 _buildStatusChip(claim.status),
               ],
@@ -115,7 +117,7 @@ class ClaimsScreen extends ConsumerWidget {
   }
 
   void _showActionModal(BuildContext context, WidgetRef ref, Claim claim) {
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA');
+    final userCurrency = ref.read(appSettingsProvider)?.currency ?? 'FCFA';
 
     showModalBottomSheet(
       context: context,
@@ -123,7 +125,7 @@ class ClaimsScreen extends ConsumerWidget {
       isScrollControlled: true,
       builder: (context) => PremiumActionModal(
         title: claim.debtor,
-        amountText: currencyFormat.format(claim.remaining > 0 ? claim.remaining : claim.amount),
+        amountText: CurrencyFormatter.format(claim.remaining > 0 ? claim.remaining : claim.amount, userCurrency),
         amountColor: AppColors.primaryGreen,
         primaryActionLabel: 'Recouvrér',
         primaryActionIcon: Icons.money,

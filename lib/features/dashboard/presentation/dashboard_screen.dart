@@ -9,6 +9,8 @@ import '../../transactions/presentation/transaction_controller.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/premium_action_modal.dart';
+import '../../../core/providers/app_settings_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -16,7 +18,7 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardState = ref.watch(dashboardControllerProvider);
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: '€'); // Adjust symbol if needed
+    final userCurrency = ref.watch(appSettingsProvider)?.currency ?? 'FCFA';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -53,7 +55,7 @@ class DashboardScreen extends ConsumerWidget {
                 _buildSummaryCard(
                   context,
                   title: 'Solde Total',
-                  amount: currencyFormat.format(data.balance),
+                  amount: CurrencyFormatter.format(data.balance, userCurrency),
                   color: AppColors.accentBlue,
                   icon: Icons.account_balance,
                 ),
@@ -66,7 +68,7 @@ class DashboardScreen extends ConsumerWidget {
                         child: _buildSummaryCard(
                           context,
                           title: 'Créances',
-                          amount: currencyFormat.format(data.totalClaims),
+                          amount: CurrencyFormatter.format(data.totalClaims, userCurrency),
                           color: AppColors.primaryGreen,
                           icon: Icons.monetization_on,
                           isSmall: true,
@@ -80,7 +82,7 @@ class DashboardScreen extends ConsumerWidget {
                         child: _buildSummaryCard(
                           context,
                           title: 'Dettes',
-                          amount: currencyFormat.format(data.totalDebts),
+                          amount: CurrencyFormatter.format(data.totalDebts, userCurrency),
                           color: Colors.purple,
                           icon: Icons.money_off,
                           isSmall: true,
@@ -122,7 +124,7 @@ class DashboardScreen extends ConsumerWidget {
                     child: Text('Aucune transaction récente', style: TextStyle(color: AppColors.textMuted)),
                   )
                 else
-                  ...data.recentTransactions.map((tx) => _buildTransactionItem(context, ref, tx, currencyFormat)),
+                  ...data.recentTransactions.map((tx) => _buildTransactionItem(context, ref, tx, userCurrency)),
               ],
             ),
           );
@@ -181,7 +183,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTransactionItem(BuildContext context, WidgetRef ref, dynamic tx, NumberFormat format) {
+  Widget _buildTransactionItem(BuildContext context, WidgetRef ref, dynamic tx, String currency) {
     final isExpense = tx.type == 'expense';
     final color = isExpense ? AppColors.danger : AppColors.primaryGreen;
     
@@ -226,7 +228,7 @@ class DashboardScreen extends ConsumerWidget {
               ),
             ),
             Text(
-              '${isExpense ? '-' : '+'}${format.format(tx.amount)}',
+              '${isExpense ? '-' : '+'}${CurrencyFormatter.format(tx.amount, currency)}',
               style: TextStyle(
                 color: color,
                 fontWeight: FontWeight.bold,
@@ -258,7 +260,7 @@ class DashboardScreen extends ConsumerWidget {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => PremiumActionModal(
         title: tx.description ?? (isExpense ? tx.category ?? 'Dépense' : tx.source ?? 'Revenu'),
-        amountText: format.format(tx.amount),
+        amountText: CurrencyFormatter.format(tx.amount, ref.read(appSettingsProvider)?.currency ?? 'FCFA'),
         amountColor: isExpense ? AppColors.danger : AppColors.primaryGreen,
         primaryActionLabel: isExpense ? 'Ajouter Dépense' : 'Ajouter Revenu',
         primaryActionIcon: isExpense ? Icons.remove_circle : Icons.add_circle,

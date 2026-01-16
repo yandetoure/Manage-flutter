@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'transaction_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/providers/app_settings_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 
 class TransactionsScreen extends ConsumerWidget {
   const TransactionsScreen({super.key});
@@ -11,7 +13,7 @@ class TransactionsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final transactionsState = ref.watch(transactionControllerProvider);
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: '€');
+    final userCurrency = ref.watch(appSettingsProvider)?.currency ?? 'FCFA';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -76,7 +78,7 @@ class TransactionsScreen extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          '${isExpense ? '-' : '+'}${currencyFormat.format(tx.amount)}',
+                          '${isExpense ? '-' : '+'}${CurrencyFormatter.format(tx.amount, userCurrency)}',
                           style: TextStyle(
                             color: color,
                             fontWeight: FontWeight.bold,

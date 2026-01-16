@@ -13,6 +13,16 @@ class SettingsController extends StateNotifier<AsyncValue<UserSettings?>> {
     getSettings();
   }
 
+  Future<UserSettings?> loadSettings() async {
+    try {
+      final settings = await _repository.getSettings();
+      state = AsyncValue.data(settings);
+      return settings;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> getSettings() async {
     try {
       final settings = await _repository.getSettings();

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/premium_action_modal.dart';
+import '../../../core/providers/app_settings_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 import 'payment_modal.dart';
 import 'history_modal.dart';
 import 'debt_controller.dart';
@@ -16,7 +18,7 @@ class DebtsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final debtsState = ref.watch(debtControllerProvider);
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA');
+    final userCurrency = ref.watch(appSettingsProvider)?.currency ?? 'FCFA';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -40,7 +42,7 @@ class DebtsScreen extends ConsumerWidget {
               itemCount: debts.length,
               itemBuilder: (context, index) {
                 final debt = debts[index];
-                return _buildDebtItem(context, ref, debt, currencyFormat);
+                return _buildDebtItem(context, ref, debt, userCurrency);
               },
             ),
           );
@@ -49,7 +51,7 @@ class DebtsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDebtItem(BuildContext context, WidgetRef ref, Debt debt, NumberFormat format) {
+  Widget _buildDebtItem(BuildContext context, WidgetRef ref, Debt debt, String currency) {
     return InkWell(
       onTap: () => _showActionModal(context, ref, debt),
       child: Container(
@@ -84,7 +86,7 @@ class DebtsScreen extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(format.format(debt.amount), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(CurrencyFormatter.format(debt.amount, currency), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                 const SizedBox(height: 4),
                 _buildStatusChip(debt.status),
               ],
@@ -119,7 +121,7 @@ class DebtsScreen extends ConsumerWidget {
   }
 
   void _showActionModal(BuildContext context, WidgetRef ref, Debt debt) {
-    final currencyFormat = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA');
+    final userCurrency = ref.read(appSettingsProvider)?.currency ?? 'FCFA';
 
     showModalBottomSheet(
       context: context,
@@ -127,7 +129,7 @@ class DebtsScreen extends ConsumerWidget {
       isScrollControlled: true,
       builder: (context) => PremiumActionModal(
         title: debt.creditor,
-        amountText: currencyFormat.format(debt.remaining > 0 ? debt.remaining : debt.amount),
+        amountText: CurrencyFormatter.format(debt.remaining > 0 ? debt.remaining : debt.amount, userCurrency),
         amountColor: Colors.purpleAccent,
         primaryActionLabel: 'Rembourser',
         primaryActionIcon: Icons.payments,
