@@ -1,0 +1,59 @@
+Analyzing finance...                                            
+
+warning • The value of the field '_ref' isn't used • lib/core/network/api_client.dart:9:13 • unused_field
+warning • Unused import: '../../core/placeholder_screen.dart' • lib/core/router/app_router.dart:11:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/theme/app_theme.dart:26:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/theme/app_theme.dart:30:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/theme/app_theme.dart:40:44 • deprecated_member_use
+warning • Unused import: 'package:dio/dio.dart' • lib/features/auth/data/auth_repository.dart:1:8 • unused_import
+warning • The value of the field '_ref' isn't used • lib/features/auth/data/auth_repository.dart:10:13 • unused_field
+warning • The value of the local variable 'user' isn't used • lib/features/auth/data/auth_repository.dart:23:13 • unused_local_variable
+   info • Use 'rethrow' to rethrow a caught exception • lib/features/auth/data/auth_repository.dart:30:7 • use_rethrow_when_possible
+warning • Unused import: 'package:go_router/go_router.dart' • lib/features/auth/presentation/login_screen.dart:3:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/auth/presentation/login_screen.dart:70:58 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/auth/presentation/login_screen.dart:73:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/auth/presentation/login_screen.dart:93:72 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/auth/presentation/login_screen.dart:113:72 • deprecated_member_use
+   info • Use 'rethrow' to rethrow a caught exception • lib/features/dashboard/data/dashboard_repository.dart:17:7 • use_rethrow_when_possible
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/dashboard/presentation/dashboard_screen.dart:116:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/dashboard/presentation/dashboard_screen.dart:127:32 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/dashboard/presentation/dashboard_screen.dart:165:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/dashboard/presentation/dashboard_screen.dart:172:28 • deprecated_member_use
+   info • Use 'rethrow' to rethrow a caught exception • lib/features/expenses/data/expense_repository.dart:27:7 • use_rethrow_when_possible
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/expenses/presentation/add_expense_screen.dart:78:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/expenses/presentation/add_expense_screen.dart:106:48 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/expenses/presentation/add_expense_screen.dart:109:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/expenses/presentation/add_expense_screen.dart:135:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/expenses/presentation/add_expense_screen.dart:168:48 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/expenses/presentation/add_expense_screen.dart:174:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/expenses/presentation/add_expense_screen.dart:186:48 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/expenses/presentation/add_expense_screen.dart:189:9 • deprecated_member_use
+   info • Use 'rethrow' to rethrow a caught exception • lib/features/revenues/data/revenue_repository.dart:27:7 • use_rethrow_when_possible
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/revenues/presentation/add_revenue_screen.dart:77:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/revenues/presentation/add_revenue_screen.dart:105:48 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/revenues/presentation/add_revenue_screen.dart:108:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/revenues/presentation/add_revenue_screen.dart:134:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/revenues/presentation/add_revenue_screen.dart:167:48 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/revenues/presentation/add_revenue_screen.dart:173:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/revenues/presentation/add_revenue_screen.dart:185:48 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/revenues/presentation/add_revenue_screen.dart:188:9 • deprecated_member_use
+   info • Use 'rethrow' to rethrow a caught exception • lib/features/savings/data/saving_repository.dart:19:7 • use_rethrow_when_possible
+   info • Use 'rethrow' to rethrow a caught exception • lib/features/savings/data/saving_repository.dart:39:7 • use_rethrow_when_possible
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/savings/presentation/add_saving_screen.dart:65:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/savings/presentation/add_saving_screen.dart:74:52 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/savings/presentation/add_saving_screen.dart:88:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/savings/presentation/add_saving_screen.dart:116:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/savings/presentation/savings_screen.dart:43:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/settings/presentation/settings_screen.dart:57:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/settings/presentation/settings_screen.dart:63:26 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/features/transactions/data/transaction_repository.dart:15:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/transactions/data/transaction_repository.dart:17:7 • avoid_print
+   info • Use 'rethrow' to rethrow a caught exception • lib/features/transactions/data/transaction_repository.dart:32:7 • use_rethrow_when_possible
+   info • Don't invoke 'print' in production code • lib/features/transactions/presentation/transaction_controller.dart:22:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/transactions/presentation/transaction_controller.dart:23:7 • avoid_print
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/transactions/presentation/transactions_screen.dart:44:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/transactions/presentation/transactions_screen.dart:51:40 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/main_layout.dart:16:62 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/main_layout.dart:21:49 • deprecated_member_use
+
+55 issues found. (ran in 25.8s)

@@ -16,14 +16,21 @@ class DashboardData {
 
   factory DashboardData.fromJson(Map<String, dynamic> json) {
     return DashboardData(
-      totalRevenues: (json['total_revenues'] ?? 0).toDouble(),
-      totalExpenses: (json['total_expenses'] ?? 0).toDouble(),
-      totalSavings: (json['total_savings'] ?? 0).toDouble(),
-      balance: (json['balance'] ?? 0).toDouble(),
+      totalRevenues: _parseDouble(json['total_revenues']),
+      totalExpenses: _parseDouble(json['total_expenses']),
+      totalSavings: _parseDouble(json['total_savings']),
+      balance: _parseDouble(json['balance']),
       recentTransactions: (json['recent_transactions'] as List?)
           ?.map((e) => TransactionItem.fromJson(e))
           .toList() ?? [],
     );
+  }
+
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
   }
 }
 
@@ -45,7 +52,7 @@ class TransactionItem {
   factory TransactionItem.fromJson(Map<String, dynamic> json) {
     return TransactionItem(
       id: json['id'],
-      amount: (json['amount'] ?? 0).toDouble(),
+      amount: DashboardData._parseDouble(json['amount']),
       description: json['description'],
       date: json['date'] ?? '',
       type: json['type'] ?? 'revenue',
