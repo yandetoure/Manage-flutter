@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'auth_repository.dart';
+import '../data/auth_repository.dart';
 
 final authStateProvider = StateNotifierProvider<AuthNotifier, AsyncValue<bool>>((ref) {
   return AuthNotifier(ref.read(authRepositoryProvider));
