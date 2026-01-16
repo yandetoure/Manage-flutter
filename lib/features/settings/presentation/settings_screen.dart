@@ -167,11 +167,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       onTap: () {}, // TODO
                     ),
                     SettingsCard(
-                      icon: Icons.download,
+                      icon: Icons.camera_alt,
                       iconColor: Colors.green,
-                      title: 'Export',
-                      subtitle: 'Excel, PDF, Backup',
-                      onTap: () => _showExportDialog(),
+                      title: 'Scanner un reçu',
+                      subtitle: 'OCR et extraction automatique',
+                      trailing: const Icon(Icons.chevron_right, color: AppColors.textMuted),
+                      onTap: () => _showComingSoonDialog('Scanner de reçu'),
                     ),
                     SettingsCard(
                       icon: Icons.upload,
@@ -194,6 +195,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 SettingsSection(
                   title: 'Security',
                   children: [
+                    SettingsCard(
+                      icon: Icons.replay,
+                      iconColor: Colors.blue,
+                      title: 'Transactions récurrentes',
+                      subtitle: 'Gérer les transactions automatiques',
+                      trailing: const Icon(Icons.chevron_right, color: AppColors.textMuted),
+                      onTap: () => _showComingSoonDialog('Transactions récurrentes'),
+                    ),
                     SettingsCard(
                       icon: Icons.fingerprint,
                       iconColor: Colors.blue,
@@ -239,7 +248,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       iconColor: Colors.cyan,
                       title: 'Recurring transactions',
                       badgeCount: 0,
-                      onTap: () {}, // TODO
+                      onTap: () => _showComingSoonDialog('Recurring transactions'),
                     ),
                     SettingsCard(
                       icon: Icons.savings,
@@ -267,21 +276,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       iconColor: Colors.green,
                       title: 'Repayment plan',
                       subtitle: 'Plan the repayment of your debts',
-                      onTap: () {}, // TODO
+                      onTap: () => _showComingSoonDialog('Repayment plan'),
+                    ),
+                    SettingsCard(
+                      icon: Icons.assignment,
+                      iconColor: Colors.orange,
+                      title: 'Plan de remboursement',
+                      subtitle: 'Planifier vos remboursements',
+                      trailing: const Icon(Icons.chevron_right, color: AppColors.textMuted),
+                      onTap: () => _showComingSoonDialog('Plan de remboursement'),
                     ),
                     SettingsCard(
                       icon: Icons.document_scanner,
                       iconColor: Colors.purple,
                       title: 'Scan a receipt',
                       subtitle: 'Scan your receipts',
-                      onTap: () {}, // TODO
+                      onTap: () => _showComingSoonDialog('Scan a receipt'),
                     ),
                     SettingsCard(
                       icon: Icons.assessment,
                       iconColor: Colors.blue,
                       title: 'Annual report',
                       subtitle: '12-month view',
-                      onTap: () {}, // TODO
+                      onTap: () => _showComingSoonDialog('Annual report'),
                     ),
                   ],
                 ),
@@ -301,7 +318,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       icon: Icons.help,
                       iconColor: Colors.blue,
                       title: 'Help & Tutorial',
-                      onTap: () {}, // TODO
+                      onTap: () => _showComingSoonDialog('Help & Tutorial'),
+                    ),
+                    SettingsCard(
+                      icon: Icons.help,
+                      iconColor: Colors.blue,
+                      title: 'Aide & Tutoriel',
+                      subtitle: 'Guide d\'utilisation',
+                      trailing: const Icon(Icons.chevron_right, color: AppColors.textMuted),
+                      onTap: () => _showHelpDialog(),
                     ),
                     SettingsCard(
                       icon: Icons.book,
@@ -309,7 +334,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       title: 'Tutorials',
                       subtitle: 'Discover features',
                       badgeCount: 12,
-                      onTap: () {}, // TODO
+                      onTap: () => _showComingSoonDialog('Tutorials'),
                     ),
                   ],
                 ),
@@ -617,6 +642,118 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             savings: savings,
           );
         },
+      ),
+    );
+  }
+
+  void _showComingSoonDialog(String feature) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.accentBlue.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.upcoming, color: AppColors.accentBlue, size: 24),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text('Bientôt disponible !', style: TextStyle(color: Colors.white, fontSize: 18)),
+            ),
+          ],
+        ),
+        content: Text(
+          'La fonctionnalité "$feature" sera disponible dans une prochaine mise à jour.',
+          style: const TextStyle(color: AppColors.textMuted, fontSize: 15),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK', style: TextStyle(color: AppColors.primaryGreen, fontSize: 16)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showHelpDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.help, color: AppColors.accentBlue, size: 28),
+            SizedBox(width: 12),
+            Text('Aide & Support', style: TextStyle(color: Colors.white, fontSize: 18)),
+          ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Besoin d\'aide ?',
+              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 12),
+            Text(
+              '• Consultez le tutoriel de bienvenue\n• Explorez les fonctionnalités\n• Email: support@finance.app',
+              style: TextStyle(color: AppColors.textMuted, fontSize: 14, height: 1.6),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Fermer', style: TextStyle(color: AppColors.primaryGreen)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showTutorialsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.school, color: Colors.purple, size: 28),
+            SizedBox(width: 12),
+            Text('Tutoriels', style: TextStyle(color: Colors.white, fontSize: 18)),
+          ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('📊 Gestion transactions', style: TextStyle(color: Colors.white, fontSize: 14)),
+            SizedBox(height: 8),
+            Text('💰 Budgets intelligents', style: TextStyle(color: Colors.white, fontSize: 14)),
+            SizedBox(height: 8),
+            Text('📈 Statistiques avancées', style: TextStyle(color: Colors.white, fontSize: 14)),
+            SizedBox(height: 8),
+            Text('📤 Export de données', style: TextStyle(color: Colors.white, fontSize: 14)),
+            SizedBox(height: 8),
+            Text('⚙️ Personnalisation', style: TextStyle(color: Colors.white, fontSize: 14)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Fermer', style: TextStyle(color: AppColors.primaryGreen)),
+          ),
+        ],
       ),
     );
   }

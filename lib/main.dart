@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/app_colors.dart';
 import 'core/router/app_router.dart';
@@ -9,7 +10,12 @@ import 'core/widgets/splash_screen.dart';
 import 'core/widgets/onboarding_screen.dart';
 import 'features/settings/presentation/settings_controller.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize date formatting for all locales
+  await initializeDateFormatting();
+  
   runApp(const ProviderScope(child: MyApp()));
 }
 
